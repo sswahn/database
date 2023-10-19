@@ -73,6 +73,21 @@ Deletes the specified database.
 **.close()**  
 Closes the connection to the database.
 
+## Example  
+```javascript
+const db = database()
+
+const storeLocally = () => {
+  try {
+    await db.add({ id: 1, name: 'John Doe' })
+    const record = await db.get(1)
+  } catch (error) {
+    console.error(`Error: ${error}`)
+  }
+}
+
+storeLocally()
+```
 
 ## Licence
 Bind is [MIT Licensed](https://github.com/sswahn/bind/blob/main/LICENSE)
