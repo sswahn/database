@@ -10,7 +10,7 @@ let dbInstance = null
 const openDatabase = async storeConfigs => {
   if (dbInstance) return dbInstance
 
-  const effectiveConfig = { ...DEFAULT_CONFIG, ...storeConfigs[0] }; // Merging default with provided config
+  const effectiveConfig = { ...DEFAULT_CONFIG, ...storeConfigs[0] } // Merging default with provided config
 
   return new Promise((resolve, reject) => {
     const connection = indexedDB.open(effectiveConfig.dbName, effectiveConfig.dbVersion)
@@ -55,8 +55,8 @@ const Database = (storeConfigs = [DEFAULT_CONFIG]) => {
       const request = indexedDB.deleteDatabase(database)
       request.onsuccess = () => {
         if (dbInstance) {
-          dbInstance.close();
-          dbInstance = null;
+          dbInstance.close()
+          dbInstance = null
         }
         resolve(`Database ${database} deleted successfully.`)
       }
@@ -82,4 +82,4 @@ const Database = (storeConfigs = [DEFAULT_CONFIG]) => {
   }
 }
 
-export default Database;
+export default Database
