@@ -10,13 +10,15 @@ let dbInstance = null
 const openDatabase = async storeConfigs => {
   if (dbInstance) return dbInstance
 
+  const effectiveConfig = { ...DEFAULT_CONFIG, ...storeConfigs[0] }; // Merging default with provided config
+
   return new Promise((resolve, reject) => {
-    const connection = indexedDB.open(DEFAULT_CONFIG.dbName, DEFAULT_CONFIG.dbVersion)
+    const connection = indexedDB.open(effectiveConfig.dbName, effectiveConfig.dbVersion)
     connection.onupgradeneeded = event => {
       const db = event.target.result
       storeConfigs.forEach(storeConfig => {
         if (!db.objectStoreNames.contains(storeConfig.name)) {
-          const store = db.createObjectStore(storeConfig.name, { keyPath: storeConfig.keyPath || DEFAULT_CONFIG.keyPath })
+          const store = db.createObjectStore(storeConfig.name, { keyPath: storeConfig.keyPath || effectiveConfig.keyPath })
           storeConfig.indexes && storeConfig.indexes.forEach(index => {
             store.createIndex(index.name, index.keyPath, { unique: index.unique })
           })
@@ -27,7 +29,7 @@ const openDatabase = async storeConfigs => {
       dbInstance = connection.result
       resolve(dbInstance)
     }
-    connection.onerror = event => reject(`Failed to open DB: ${event.target.error}`)
+    connection.onerror = event => reject(new Error(`Failed to open DB: ${event.target.error}`))
   })
 }
 
@@ -39,7 +41,7 @@ const executeRequest = async (storeConfigs, storeName, mode, operation, data) =>
 
   return new Promise((resolve, reject) => {
     request.onsuccess = () => resolve(request.result)
-    request.onerror = event => reject(`Failed to execute ${operation} on ${storeName}: ${event.target.error}`)
+    request.onerror = event => reject(new Error(`Failed to execute ${operation} on ${storeName}: ${event.target.error}`))
   })
 }
 
@@ -51,8 +53,14 @@ const Database = (storeConfigs = [DEFAULT_CONFIG]) => {
     remove: (key, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readwrite', 'delete', key),
     destroy: (database = DEFAULT_CONFIG.dbName) => new Promise((resolve, reject) => {
       const request = indexedDB.deleteDatabase(database)
-      request.onsuccess = () => resolve(`Database ${database} deleted successfully.`)
-      request.onerror = event => reject(`Failed to delete ${database}: ${event.target.error}`)
+      request.onsuccess = () => {
+        if (dbInstance) {
+          dbInstance.close();
+          dbInstance = null;
+        }
+        resolve(`Database ${database} deleted successfully.`)
+      }
+      request.onerror = event => reject(new Error(`Failed to delete ${database}: ${event.target.error}`))
     }),
     addAll: async (items, storeName = DEFAULT_CONFIG.storeName) => {
       const db = await openDatabase(storeConfigs)
@@ -62,10 +70,16 @@ const Database = (storeConfigs = [DEFAULT_CONFIG]) => {
 
       return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve()
-        transaction.onerror = event => reject(`Failed to add items to ${storeName}: ${event.target.error}`)
+        transaction.onerror = event => reject(new Error(`Failed to add items to ${storeName}: ${event.target.error}`))
       })
+    },
+    close: () => {
+      if (dbInstance) {
+        dbInstance.close()
+        dbInstance = null
+      }
     }
   }
 }
 
-export default Database
+export default Database;
