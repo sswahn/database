@@ -8,12 +8,18 @@ const DEFAULT_CONFIG = {
 let dbInstance = null
 
 const openDatabase = async storeConfigs => {
-  if (dbInstance) return dbInstance
-
-  const effectiveConfig = { ...DEFAULT_CONFIG, ...storeConfigs[0] } // Merging default with provided config
-
+  if (dbInstance) {
+    return dbInstance
+  }
+  const effectiveConfig = { 
+    ...DEFAULT_CONFIG, 
+    ...storeConfigs[0] 
+  }
   return new Promise((resolve, reject) => {
-    const connection = indexedDB.open(effectiveConfig.dbName, effectiveConfig.dbVersion)
+    const connection = indexedDB.open(
+      effectiveConfig.dbName, 
+      effectiveConfig.dbVersion
+    )
     connection.onupgradeneeded = event => {
       const db = event.target.result
       storeConfigs.forEach(storeConfig => {
@@ -29,7 +35,9 @@ const openDatabase = async storeConfigs => {
       dbInstance = connection.result
       resolve(dbInstance)
     }
-    connection.onerror = event => reject(new Error(`Failed to open DB: ${event.target.error}`))
+    connection.onerror = event => {
+      reject(new Error(`Failed to open DB: ${event.target.error}`))
+    }
   })
 }
 
@@ -40,18 +48,30 @@ const executeRequest = async (storeConfigs, storeName, mode, operation, data) =>
   const request = data ? objectStore[operation](data) : objectStore[operation]()
 
   return new Promise((resolve, reject) => {
-    request.onsuccess = () => resolve(request.result)
-    request.onerror = event => reject(new Error(`Failed to execute ${operation} on ${storeName}: ${event.target.error}`))
+    request.onsuccess = () => {
+      resolve(request.result)
+    }
+    request.onerror = event => {
+      reject(new Error(`Failed to execute ${operation} on ${storeName}: ${event.target.error}`))
+    }
   })
 }
 
 const database = (storeConfigs = [DEFAULT_CONFIG]) => {
   return {
-    get: (key, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readonly', 'get', key),
-    add: (data, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readwrite', 'add', data),
-    put: (data, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readwrite', 'put', data),
-    remove: (key, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readwrite', 'delete', key),
-    destroy: (database = DEFAULT_CONFIG.dbName) => new Promise((resolve, reject) => {
+    get(key, storeName = DEFAULT_CONFIG.storeName) {
+      return executeRequest(storeConfigs, storeName, 'readonly', 'get', key)
+    },
+    add(data, storeName = DEFAULT_CONFIG.storeName) {
+      return executeRequest(storeConfigs, storeName, 'readwrite', 'add', data)
+    },
+    put(data, storeName = DEFAULT_CONFIG.storeName) {
+      return executeRequest(storeConfigs, storeName, 'readwrite', 'put', data)
+    },
+    remove(key, storeName = DEFAULT_CONFIG.storeName) {
+      return executeRequest(storeConfigs, storeName, 'readwrite', 'delete', key)
+    },
+    destroy(database = DEFAULT_CONFIG.dbName) => new Promise((resolve, reject) {
       const request = indexedDB.deleteDatabase(database)
       request.onsuccess = () => {
         if (dbInstance) {
@@ -60,20 +80,26 @@ const database = (storeConfigs = [DEFAULT_CONFIG]) => {
         }
         resolve(`Database ${database} deleted successfully.`)
       }
-      request.onerror = event => reject(new Error(`Failed to delete ${database}: ${event.target.error}`))
+      request.onerror = event => {
+        reject(new Error(`Failed to delete ${database}: ${event.target.error}`))
+      }
     }),
-    addAll: async (items, storeName = DEFAULT_CONFIG.storeName) => {
+    async addAll(items, storeName = DEFAULT_CONFIG.storeName) {
       const db = await openDatabase(storeConfigs)
       const transaction = db.transaction(storeName, 'readwrite')
       const objectStore = transaction.objectStore(storeName)
       items.forEach(item => objectStore.add(item))
 
       return new Promise((resolve, reject) => {
-        transaction.oncomplete = () => resolve()
-        transaction.onerror = event => reject(new Error(`Failed to add items to ${storeName}: ${event.target.error}`))
+        transaction.oncomplete = () => {
+          resolve()
+        }
+        transaction.onerror = event => {
+          reject(new Error(`Failed to add items to ${storeName}: ${event.target.error}`))
+        }
       })
     },
-    close: () => {
+    close() {
       if (dbInstance) {
         dbInstance.close()
         dbInstance = null
