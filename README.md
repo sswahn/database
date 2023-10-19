@@ -81,6 +81,7 @@ const storeLocally = async () => {
   try {
     await db.add({ id: 1, name: 'John Doe' })
     const record = await db.get(1)
+    return record
   } catch (error) {
     console.error(`Error: ${error}`)
   }
