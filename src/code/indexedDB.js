@@ -45,7 +45,7 @@ const executeRequest = async (storeConfigs, storeName, mode, operation, data) =>
   })
 }
 
-const Database = (storeConfigs = [DEFAULT_CONFIG]) => {
+const database = (storeConfigs = [DEFAULT_CONFIG]) => {
   return {
     get: (key, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readonly', 'get', key),
     add: (data, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readwrite', 'add', data),
@@ -82,4 +82,4 @@ const Database = (storeConfigs = [DEFAULT_CONFIG]) => {
   }
 }
 
-export default Database
+export default database
