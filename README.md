@@ -77,7 +77,7 @@ Closes the connection to the database.
 ```javascript
 const db = database()
 
-const storeLocally = () => {
+const storeLocally = async () => {
   try {
     await db.add({ id: 1, name: 'John Doe' })
     const record = await db.get(1)
