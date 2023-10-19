@@ -1,96 +1,71 @@
-const DEFAULT_STORE = 'store';
-const DB_NAME = 'indexedDB';
-const DB_VERSION = 1;
-const DEFAULT_KEY_PATH = 'id';
+const DEFAULT_CONFIG = {
+  storeName: 'store',
+  dbName: 'indexedDB',
+  dbVersion: 1,
+  keyPath: 'id'
+}
 
-const openDatabase = async (storeConfigs) => {
+let dbInstance = null
+
+const openDatabase = async storeConfigs => {
+  if (dbInstance) return dbInstance
+
   return new Promise((resolve, reject) => {
-    const connection = indexedDB.open(DB_NAME, DB_VERSION);
+    const connection = indexedDB.open(DEFAULT_CONFIG.dbName, DEFAULT_CONFIG.dbVersion)
     connection.onupgradeneeded = event => {
-      const db = event.target.result;
+      const db = event.target.result
       storeConfigs.forEach(storeConfig => {
         if (!db.objectStoreNames.contains(storeConfig.name)) {
-          const store = db.createObjectStore(storeConfig.name, { keyPath: storeConfig.keyPath || DEFAULT_KEY_PATH });
-          
-          // Create indexes if specified
+          const store = db.createObjectStore(storeConfig.name, { keyPath: storeConfig.keyPath || DEFAULT_CONFIG.keyPath })
           storeConfig.indexes && storeConfig.indexes.forEach(index => {
-            store.createIndex(index.name, index.keyPath, { unique: index.unique });
-          });
+            store.createIndex(index.name, index.keyPath, { unique: index.unique })
+          })
         }
-      });
-    };
-    connection.onsuccess = () => resolve(connection.result);
-    connection.onerror = () => reject(connection.error);
-  });
-};
-
-const executeRequest = async (db, store, mode, action, data) => {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(store, mode);
-    const objectStore = transaction.objectStore(store);
-    const request = action(objectStore, data);
-
-    request.onsuccess = () => {
-      db.close();
-      resolve(request.result);
-    };
-
-    request.onerror = () => {
-      db.close();
-      reject(request.error);
-    };
-  });
-};
-
-const Database = (storeConfigs = [{ name: DEFAULT_STORE }]) => {
-  return {
-    get: async (key, storeName = DEFAULT_STORE) => {
-      const db = await openDatabase(storeConfigs);
-      return executeRequest(db, storeName, 'readonly', (os) => os.get(key));
-    },
-
-    add: async (data, storeName = DEFAULT_STORE) => {
-      const db = await openDatabase(storeConfigs);
-      return executeRequest(db, storeName, 'readwrite', (os) => os.add(data));
-    },
-
-    put: async (data, storeName = DEFAULT_STORE) => {
-      const db = await openDatabase(storeConfigs);
-      return executeRequest(db, storeName, 'readwrite', (os) => os.put(data));
-    },
-
-    remove: async (key, storeName = DEFAULT_STORE) => {
-      const db = await openDatabase(storeConfigs);
-      return executeRequest(db, storeName, 'readwrite', (os) => os.delete(key));
-    },
-
-    destroy: async (database = DB_NAME) => {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.deleteDatabase(database);
-        request.onsuccess = () => resolve(`Database ${database} deleted successfully.`);
-        request.onerror = () => reject(request.error);
-      });
-    },
-
-    // Bulk add
-    addAll: async (items, storeName = DEFAULT_STORE) => {
-      const db = await openDatabase(storeConfigs);
-      const transaction = db.transaction(storeName, 'readwrite');
-      const objectStore = transaction.objectStore(storeName);
-      items.forEach(item => objectStore.add(item));
-
-      return new Promise((resolve, reject) => {
-        transaction.oncomplete = () => {
-          db.close();
-          resolve();
-        };
-        transaction.onerror = () => {
-          db.close();
-          reject(transaction.error);
-        };
-      });
+      })
     }
-  };
-};
+    connection.onsuccess = () => {
+      dbInstance = connection.result
+      resolve(dbInstance)
+    }
+    connection.onerror = event => reject(`Failed to open DB: ${event.target.error}`)
+  })
+}
+
+const executeRequest = async (storeConfigs, storeName, mode, operation, data) => {
+  const db = await openDatabase(storeConfigs)
+  const transaction = db.transaction(storeName, mode)
+  const objectStore = transaction.objectStore(storeName)
+  const request = data ? objectStore[operation](data) : objectStore[operation]()
+
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result)
+    request.onerror = event => reject(`Failed to execute ${operation} on ${storeName}: ${event.target.error}`)
+  })
+}
+
+const Database = (storeConfigs = [DEFAULT_CONFIG]) => {
+  return {
+    get: (key, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readonly', 'get', key),
+    add: (data, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readwrite', 'add', data),
+    put: (data, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readwrite', 'put', data),
+    remove: (key, storeName = DEFAULT_CONFIG.storeName) => executeRequest(storeConfigs, storeName, 'readwrite', 'delete', key),
+    destroy: (database = DEFAULT_CONFIG.dbName) => new Promise((resolve, reject) => {
+      const request = indexedDB.deleteDatabase(database)
+      request.onsuccess = () => resolve(`Database ${database} deleted successfully.`)
+      request.onerror = event => reject(`Failed to delete ${database}: ${event.target.error}`)
+    }),
+    addAll: async (items, storeName = DEFAULT_CONFIG.storeName) => {
+      const db = await openDatabase(storeConfigs)
+      const transaction = db.transaction(storeName, 'readwrite')
+      const objectStore = transaction.objectStore(storeName)
+      items.forEach(item => objectStore.add(item))
+
+      return new Promise((resolve, reject) => {
+        transaction.oncomplete = () => resolve()
+        transaction.onerror = event => reject(`Failed to add items to ${storeName}: ${event.target.error}`)
+      })
+    }
+  }
+}
 
 export default Database
