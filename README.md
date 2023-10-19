@@ -49,7 +49,7 @@ db.close()
 
 ## API  
 
-**Database(storeConfigs)**  
+**database(storeConfigs)**  
 Initializes the database with the provided store configurations.  
 
 **.get(key, storeName)**  
