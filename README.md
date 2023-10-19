@@ -4,7 +4,7 @@ Easily interact with the IndexedDB API with a simplified, promise-based approach
 ## Features
   · Simplified promise-based API  
   · Singleton pattern ensures one instance of the database is active  
-  · Default configurations established  
+  · Default setup pre-configured  
   · Bulk addition of items  
 
 ## Usage  
