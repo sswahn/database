@@ -31,7 +31,7 @@ const db = Database([
 db.add({ customID: 1, name: 'John Doe' }, 'customStore')
 
 // Get item
-db.get(1, 'customStore').then(item => console.log(item))
+db.get(1, 'customStore')
 
 // Update item
 db.put({ customID: 1, name: 'Jane Doe' }, 'customStore')
