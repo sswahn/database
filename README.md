@@ -1,4 +1,4 @@
-# IndexedDB
+# Database
 Easily interact with the IndexedDB API with a simplified, promise-based approach.
 
 ## Features
