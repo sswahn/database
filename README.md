@@ -10,7 +10,7 @@ Easily interact with the IndexedDB API with a simplified, promise-based approach
 ## Usage  
 
 ```javascript
-import Database from 'your-library-name';
+import Database from '@sswahn/indexedDB'
 
 // Initialize with custom configuration (optional)
 const db = Database([
@@ -25,25 +25,25 @@ const db = Database([
       }
     ]
   }
-]);
+])
 
 // Add item
-db.add({ customID: 1, name: 'John Doe' }, 'customStore');
+db.add({ customID: 1, name: 'John Doe' }, 'customStore')
 
 // Get item
-db.get(1, 'customStore').then(item => console.log(item));
+db.get(1, 'customStore').then(item => console.log(item))
 
 // Update item
-db.put({ customID: 1, name: 'Jane Doe' }, 'customStore');
+db.put({ customID: 1, name: 'Jane Doe' }, 'customStore')
 
 // Delete item
-db.remove(1, 'customStore');
+db.remove(1, 'customStore')
 
 // Bulk addition
-db.addAll([{ customID: 2, name: 'Alice' }, { customID: 3, name: 'Bob' }], 'customStore');
+db.addAll([{ customID: 2, name: 'Alice' }, { customID: 3, name: 'Bob' }], 'customStore')
 
 // Close the connection (optional, if needed)
-db.close();
+db.close()
 
 ```
 
