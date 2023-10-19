@@ -10,10 +10,10 @@ Easily interact with the IndexedDB API with a simplified, promise-based approach
 ## Usage  
 
 ```javascript
-import Database from '@sswahn/indexedDB'
+import database from '@sswahn/indexedDB'
 
 // Initialize with custom configuration (optional)
-const db = Database([
+const db = database([
   {
     storeName: 'customStore',
     keyPath: 'customID',
