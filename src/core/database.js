@@ -116,6 +116,21 @@ const database = (storeConfigs = [DEFAULT_CONFIG]) => {
         }
       })
     },
+    async count(storeName = DEFAULT_CONFIG.storeName) {
+      const db = await openDatabase(storeConfigs)
+      const transaction = db.transaction(storeName, 'readonly')
+      const objectStore = transaction.objectStore(storeName)
+      const request = objectStore.count()
+  
+      return new Promise((resolve, reject) => {
+        request.onsuccess = () => {
+          resolve(request.result)
+        }
+        request.onerror = event => {
+          reject(new Error(`Failed to retrieve count of records from ${storeName}.`))
+        }
+      })
+    },
     close() {
       if (dbInstance) {
         dbInstance.close()
