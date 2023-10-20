@@ -6,6 +6,7 @@
   "type": "module",
   "main": "src/index.js",
   "keywords": [
+    "database",
     "indexedDB",
     "client-side storage"
   ],
