@@ -72,7 +72,7 @@ const database = (storeConfigs = [DEFAULT_CONFIG]) => {
       return executeRequest(storeConfigs, storeName, 'readwrite', 'delete', key)
     },
     destroy(database = DEFAULT_CONFIG.dbName) {
-      return new Promise((resolve, reject) {
+      return new Promise((resolve, reject) => {
         const request = indexedDB.deleteDatabase(database)
         request.onsuccess = () => {
           if (dbInstance) {
