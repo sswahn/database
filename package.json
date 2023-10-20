@@ -6,7 +6,8 @@
   "type": "module",
   "main": "src/index.js",
   "keywords": [
-    "indexedDB"
+    "indexedDB",
+    "client-side storage"
   ],
   "repository": {
     "type": "git",
