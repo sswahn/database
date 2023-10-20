@@ -33,6 +33,9 @@ db.add({ customID: 1, name: 'John Doe' }, 'customStore')
 // Get item
 db.get(1, 'customStore')
 
+// Get all items
+db.getAll('customStore')
+
 // Update item
 db.put({ customID: 1, name: 'Jane Doe' }, 'customStore')
 
