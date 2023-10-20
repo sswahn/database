@@ -23,8 +23,8 @@ const openDatabase = async storeConfigs => {
     connection.onupgradeneeded = event => {
       const db = event.target.result
       storeConfigs.forEach(storeConfig => {
-        if (!db.objectStoreNames.contains(storeConfig.name)) {
-          const store = db.createObjectStore(storeConfig.name, { keyPath: storeConfig.keyPath || effectiveConfig.keyPath })
+        if (!db.objectStoreNames.contains(storeConfig.storeName)) {
+          const store = db.createObjectStore(storeConfig.storeName, { keyPath: storeConfig.keyPath || effectiveConfig.keyPath })
           storeConfig.indexes && storeConfig.indexes.forEach(index => {
             store.createIndex(index.name, index.keyPath, { unique: index.unique })
           })
