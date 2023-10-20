@@ -55,6 +55,9 @@ Initializes the database with the provided store configurations.
 **.get(key, storeName)**  
 Retrieves an item by key from the specified store.
 
+**.getAll(storeName)**  
+Retrieves all items from the specified store.
+
 **.add(data, storeName)**  
 Adds an item to the specified store.
 
