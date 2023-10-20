@@ -36,6 +36,9 @@ db.get(1, 'customStore')
 // Get all items
 db.getAll('customStore')
 
+// Get count
+db.count('customStore')
+
 // Update item
 db.put({ customID: 1, name: 'Jane Doe' }, 'customStore')
 
@@ -60,6 +63,9 @@ Retrieves an item by key from the specified store.
 
 **.getAll(storeName)**  
 Retrieves all items from the specified store.
+
+**.count(storeName)**  
+Retrieves count of all items in the specified store.
 
 **.add(data, storeName)**  
 Adds an item to the specified store.
