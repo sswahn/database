@@ -1,0 +1,15 @@
+{
+  "name": "@sswahn/database",
+  "version": "1.0.0-beta.0",
+  "license": "MIT",
+  "description": "Easily interact with the IndexedDB API with a simplified, promise-based approach.",
+  "type": "module",
+  "main": "src/index.js",
+  "keywords": [
+    "indexedDB"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sswahn/database"
+  }
+}
