@@ -62,6 +62,21 @@ const database = (storeConfigs = [DEFAULT_CONFIG]) => {
     get(key, storeName = DEFAULT_CONFIG.storeName) {
       return executeRequest(storeConfigs, storeName, 'readonly', 'get', key)
     },
+    async getAll(storeName = DEFAULT_CONFIG.storeName) {
+      const db = await openDatabase(storeConfigs)
+      const transaction = db.transaction(storeName, 'readonly')
+      const objectStore = transaction.objectStore(storeName)
+      const request = objectStore.getAll()
+  
+      return new Promise((resolve, reject) => {
+        request.onsuccess = () => {
+          resolve(request.result)
+        }
+        request.onerror = event => {
+          reject(new Error(`Failed to retrieve all records from ${storeName}.`))
+        }
+      })
+    },
     add(data, storeName = DEFAULT_CONFIG.storeName) {
       return executeRequest(storeConfigs, storeName, 'readwrite', 'add', data)
     },
