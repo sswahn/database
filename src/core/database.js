@@ -36,7 +36,7 @@ const openDatabase = async storeConfigs => {
       resolve(dbInstance)
     }
     connection.onerror = event => {
-      reject(new Error(`Failed to open DB: ${event.target.error}`))
+      reject(new Error(`Failed to open DB.`))
     }
   })
 }
@@ -52,7 +52,7 @@ const executeRequest = async (storeConfigs, storeName, mode, operation, data) =>
       resolve(request.result)
     }
     request.onerror = event => {
-      reject(new Error(`Failed to execute ${operation} on ${storeName}: ${event.target.error}`))
+      reject(new Error(`Failed to execute ${operation} on ${storeName}.`))
     }
   })
 }
@@ -81,7 +81,7 @@ const database = (storeConfigs = [DEFAULT_CONFIG]) => {
         resolve(`Database ${database} deleted successfully.`)
       }
       request.onerror = event => {
-        reject(new Error(`Failed to delete ${database}: ${event.target.error}`))
+        reject(new Error(`Failed to delete ${database}.`))
       }
     }),
     async addAll(items, storeName = DEFAULT_CONFIG.storeName) {
@@ -95,7 +95,7 @@ const database = (storeConfigs = [DEFAULT_CONFIG]) => {
           resolve()
         }
         transaction.onerror = event => {
-          reject(new Error(`Failed to add items to ${storeName}: ${event.target.error}`))
+          reject(new Error(`Failed to add items to ${storeName}.`))
         }
       })
     },
