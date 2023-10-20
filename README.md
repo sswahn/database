@@ -103,4 +103,4 @@ storeLocally()
 ```
 
 ## Licence
-Bind is [MIT Licensed](https://github.com/sswahn/bind/blob/main/LICENSE)
+Database is [MIT Licensed](https://github.com/sswahn/database/blob/main/LICENSE)
