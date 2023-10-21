@@ -83,7 +83,7 @@ const database = (storeConfigs = [DEFAULT_CONFIG]) => {
     put(data, storeName = DEFAULT_CONFIG.storeName) {
       return executeRequest(storeConfigs, storeName, 'readwrite', 'put', data)
     },
-    remove(key, storeName = DEFAULT_CONFIG.storeName) {
+    delete(key, storeName = DEFAULT_CONFIG.storeName) {
       return executeRequest(storeConfigs, storeName, 'readwrite', 'delete', key)
     },
     destroy(database = DEFAULT_CONFIG.dbName) {
