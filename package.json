@@ -1,6 +1,6 @@
 {
   "name": "@sswahn/database",
-  "version": "1.0.0-beta.7",
+  "version": "1.0.0-beta.8",
   "license": "MIT",
   "description": "Easily interact with the IndexedDB API with a simplified, promise-based approach.",
   "type": "module",
