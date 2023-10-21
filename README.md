@@ -2,7 +2,7 @@
 Easily interact with the IndexedDB API with a simplified, promise-based approach.
 
 ## Usage  
-Import library  
+Import library.  
 ```javascript
 import database from '@sswahn/indexedDB'
 ```
