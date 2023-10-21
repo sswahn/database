@@ -8,11 +8,13 @@ Easily interact with the IndexedDB API with a simplified, promise-based approach
   · Bulk addition of items  
 
 ## Usage  
-
+Import library  
 ```javascript
 import database from '@sswahn/indexedDB'
+```
 
-// Initialize with custom configuration (optional)
+Initialize with custom configuration (optional)  
+```javascript
 const db = database([
   {
     storeName: 'customStore',
@@ -26,7 +28,9 @@ const db = database([
     ]
   }
 ])
+```
 
+```javascript
 // Add item
 db.add({ customID: 1, name: 'John Doe' }, 'customStore')
 
