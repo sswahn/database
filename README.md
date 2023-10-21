@@ -46,7 +46,13 @@ db.count('customStore')
 Adds an item to the specified store.  
 ```javascript
 db.add({ customID: 1, name: 'John Doe' }, 'customStore')
-```  
+```
+
+### Add All
+Adds multiple items to the specified store.  
+```javascript
+db.addAll([{ customID: 2, name: 'Alice' }, { customID: 3, name: 'Bob' }], 'customStore')
+```
 
 ### Put
 Updates an item in the specified store.  
@@ -58,12 +64,6 @@ db.put({ customID: 1, name: 'Jane Doe' }, 'customStore')
 Deletes an item by key from the specified store.  
 ```javascript
 db.delete(1, 'customStore')
-```  
-
-### Add All
-Adds multiple items to the specified store.  
-```javascript
-db.addAll([{ customID: 2, name: 'Alice' }, { customID: 3, name: 'Bob' }], 'customStore')
 ```  
 
 ### Destroy
