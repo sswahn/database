@@ -7,7 +7,7 @@ Import library
 import database from '@sswahn/indexedDB'
 ```
 
-Initialize with optional custom configuration:  
+Initialize with optional custom configuration.  
 ```javascript
 const db = database([
   {
