@@ -57,7 +57,7 @@ db.put({ customID: 1, name: 'Jane Doe' }, 'customStore')
 ### Delete
 Deletes an item by key from the specified store.  
 ```javascript
-db.remove(1, 'customStore')
+db.delete(1, 'customStore')
 ```  
 
 ### Add All
