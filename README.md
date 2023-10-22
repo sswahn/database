@@ -94,5 +94,5 @@ const storeLocally = async () => {
 const data = await storeLocally()
 ```
 
-## Licence
+## License
 Database is [MIT Licensed](https://github.com/sswahn/database/blob/main/LICENSE)
