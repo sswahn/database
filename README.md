@@ -89,7 +89,10 @@ db.close()
 ```  
 
 ## Example  
+To use this library, you first initialize a database instance and then perform various operations on it. Below is a basic example to store a record and retrieve it:  
+
 ```javascript
+import database from '@sswahn/bind'
 const db = database()
 
 const storeLocally = async () => {
