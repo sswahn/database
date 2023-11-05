@@ -3,7 +3,6 @@ Easily interact with the IndexedDB API with a simplified, promise-based approach
 
 ## Features
 - Simplified API to perform common operations like get, set, delete, and more.
-- Singleton pattern ensures only one database instance is used.
 - Default configurations for quick setup.  
 
 ## Installation  
