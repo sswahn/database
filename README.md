@@ -1,4 +1,4 @@
-# Database
+# Database · [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/sswahn/database/blob/main/LICENSE) ![npm version](https://img.shields.io/npm/v/@sswahn/database)
 Easily interact with the IndexedDB API with a simplified, promise-based approach.
 
 ## Features
