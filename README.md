@@ -106,5 +106,10 @@ const storeLocally = async () => {
 const data = await storeLocally()
 ```
 
+## Related
+- [@sswahn/storage](https://www.npmjs.com/package/@sswahn/storage): A robust and easy-to-use utility for interacting with Web Storage API.
+- [@sswahn/cookie](https://www.npmjs.com/package/@sswahn/cookie): A lightweight, easy-to-use utility for efficiently managing cookies in a web browser.
+- [@sswahn/cache](https://www.npmjs.com/package/@sswahn/cache): A robust caching utility that provides easy-to-use methods for interacting with the browser's Cache API.
+
 ## License
 Database is [MIT Licensed](https://github.com/sswahn/database/blob/main/LICENSE)
