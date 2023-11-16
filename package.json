@@ -1,6 +1,6 @@
 {
   "name": "@sswahn/database",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "description": "Easily interact with the IndexedDB API with a simplified, promise-based approach.",
   "main": "src/index.js",
