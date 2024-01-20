@@ -13,7 +13,7 @@ npm install @sswahn/database
 ## Usage  
 Import library.  
 ```javascript
-import database from '@sswahn/indexedDB'
+import database from '@sswahn/database'
 ```
 
 Initialize with optional custom configuration.  
