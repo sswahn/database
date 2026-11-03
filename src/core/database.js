@@ -20,40 +20,23 @@ const normalizeConfig = storeConfigs => {
 
   const { dbName, dbVersion } = configs[0]
 
-  if (
-    typeof dbName !== 'string' ||
-    !dbName.trim() ||
-    !Number.isInteger(dbVersion) ||
-    dbVersion < 1
-  ) {
+  if (typeof dbName !== 'string' || !dbName.trim() || !Number.isInteger(dbVersion) || dbVersion < 1) {
     throw new TypeError('Invalid database name or version.')
   }
 
   const storeNames = new Set()
 
   configs.forEach(config => {
-    if (
-      config.dbName !== dbName ||
-      config.dbVersion !== dbVersion
-    ) {
-      throw new TypeError(
-        'All stores must use the same database name and version.'
-      )
+    if (config.dbName !== dbName || config.dbVersion !== dbVersion) {
+      throw new TypeError('All stores must use the same database name and version.')
     }
 
-    if (
-      typeof config.storeName !== 'string' ||
-      !config.storeName.trim() ||
-      typeof config.keyPath !== 'string' ||
-      !config.keyPath.trim()
-    ) {
+    if (typeof config.storeName !== 'string' || !config.storeName.trim() || typeof config.keyPath !== 'string' || !config.keyPath.trim()) {
       throw new TypeError('Invalid store name or key path.')
     }
 
     if (storeNames.has(config.storeName)) {
-      throw new TypeError(
-        `Duplicate store configuration: ${config.storeName}.`
-      )
+      throw new TypeError(`Duplicate store configuration: ${config.storeName}.`)
     }
 
     storeNames.add(config.storeName)
@@ -65,29 +48,10 @@ const normalizeConfig = storeConfigs => {
     const indexNames = new Set()
 
     config.indexes.forEach(index => {
-      if (
-        !index ||
-        typeof index.name !== 'string' ||
-        !index.name.trim() ||
-        !(
-          typeof index.keyPath === 'string' ||
-          (
-            Array.isArray(index.keyPath) &&
-            index.keyPath.length > 0 &&
-            index.keyPath.every(
-              key => typeof key === 'string' && key.length > 0
-            )
-          )
-        ) ||
-        (
-          index.unique !== undefined &&
-          typeof index.unique !== 'boolean'
-        ) ||
-        indexNames.has(index.name)
-      ) {
-        throw new TypeError(
-          `Invalid or duplicate index in store ${config.storeName}.`
-        )
+      if (!index || typeof index.name !== 'string' || !index.name.trim() || !(typeof index.keyPath === 'string' ||
+          (Array.isArray(index.keyPath) && index.keyPath.length > 0 && index.keyPath.every(key => typeof key === 'string' && key.length > 0))) ||
+        (index.unique !== undefined && typeof index.unique !== 'boolean') || indexNames.has(index.name)) {
+        throw new TypeError(`Invalid or duplicate index in store ${config.storeName}.`)
       }
 
       indexNames.add(index.name)
@@ -105,14 +69,10 @@ const database = (storeConfigs = [DEFAULT_CONFIG]) => {
   let openingPromise = null
 
   const getStoreConfig = storeName => {
-    const config = configs.find(
-      item => item.storeName === storeName
-    )
+    const config = configs.find(item => item.storeName === storeName)
 
     if (!config) {
-      throw new Error(
-        `Store "${storeName}" is not configured for ${dbName}.`
-      )
+      throw new Error(`Store "${storeName}" is not configured for ${dbName}.`)
     }
 
     return config
